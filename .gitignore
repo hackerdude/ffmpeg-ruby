@@ -1,0 +1,7 @@
+Manifest
+ext/ffmpeg_ruby/Makefile
+*.dSYM
+ext/ffmpeg_ruby/ffmpeg_ruby.bundle
+ext/ffmpeg_ruby/*.o
+ext/ffmpeg_ruby/*.log
+pkg/
