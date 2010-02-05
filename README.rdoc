@@ -1,0 +1,19 @@
+= Ruby FFMpeg Library
+
+A simple bridge around the FFMPeg library, concentrting in particular 
+in libavcodec/libavformat for now.
+
+To install run 
+
+ ruby extconf.rb
+
+You may need to add +--with+ on mac, to point it to macports' /opt/local for the libraries.
+
+This has worked on my snow leopard machine:
+
+  sudo ports install ffmpeg
+  (go have coffee)
+  $ env ARCHFLAGS="-arch x86_64" ruby extconf.rb --with-avformat-dir=/opt/local
+  make
+
+
