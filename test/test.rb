@@ -1,4 +1,4 @@
-require 'lib/ffmpeg-ruby'
+require "#{File.dirname(__FILE__)}/../lib/ffmpeg-ruby"
 
 puts "Here are the video codecs I support, of the #{FFMpeg::AVCodec.supported_avcodecs.length} codecs:"
 FFMpeg::AVCodec.supported_video_codecs.each{|k,v|

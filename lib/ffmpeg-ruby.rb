@@ -1,2 +1,4 @@
 # Load the C library.
-require 'ffmpeg_ruby' 
+$:.unshift "#{File.dirname(__FILE__)}/../ext/ffmpeg_ruby/"
+
+require "ffmpeg_ruby"

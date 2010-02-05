@@ -307,7 +307,7 @@ static VALUE AVFormatContext_album(VALUE self) {
 
 /** *** Ruby Interface *** **/
 void
-Init_ruby_ffmpeg()
+Init_ffmpeg_ruby()
 {
 		av_register_all();
 		mFFMpeg = rb_define_module("FFMpeg");
