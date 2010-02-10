@@ -1,19 +1,51 @@
 = Ruby FFMpeg Library
 
-A simple bridge around the FFMPeg library, concentrting in particular 
-in libavcodec/libavformat for now.
+"ffmpeg-ruby" is a ruby gem library (work in progress) that provides bindings allowing you to access the ffmpeg under ruby. FFMpeg is a cross-platform solution to record, convert and stream audio and video. It includes libavcodec - the leading audio/video codec library.
 
-To install run 
+This implementation is starting by doing the translation for some of the functions in libavcodec and libavformat to ruby.
 
- ruby extconf.rb
+FFMpeg is provided by http://ffmpeg.org/ under the LGPL license.
+
+This bindings gem is graciously provided by http://www.channels.com under the LGPL license.
+
+== Installing
+
+ $ gem install ffmpeg-ruby
+
+== Installation troubleshooting
+
+If you run into trouble, it could be the C bundle not building. This is known to happen on MacOS 64-bit or with the ffmpeg from macports. You basically need to run ruby extconf yourself then.
+
+
+ $ ruby extconf.rb
 
 You may need to add +--with+ on mac, to point it to macports' /opt/local for the libraries.
 
 This has worked on my snow leopard machine:
 
-  sudo ports install ffmpeg
+  $ sudo port install ffmpeg
   (go have coffee)
   $ env ARCHFLAGS="-arch x86_64" ruby extconf.rb --with-avformat-dir=/opt/local
   make
 
+This will provide you with a bundle you can require.
+
+== Usage
+
+See the code on +test/+ for usage. But basically it goes like this:
+
+  require 'ffmpeg-ruby'
+
+	# Get a list of the video codecs supported
+	FFMpeg::AVCodec.supported_video_codecs 
+
+	# Get a list of the audio codecs supported
+	FFMpeg::AVCodec.supported_video_codecs 
+
+	# Create new AVFormatContext
+	f = FFMpeg::AVFormatContext.new("/path/to/my/video.mov")
+
+	f.codec_contexts.each{ |ctx|
+	  puts ctx.name # The name of the codec this file uses.
+	}
 
