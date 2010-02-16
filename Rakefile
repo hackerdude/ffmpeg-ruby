@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'echoe'
 
-Echoe.new("ffmpeg-ruby", "0.1.1") do |p|
+Echoe.new("ffmpeg-ruby", "0.1.2") do |p|
 	p.description = "FFMpeg Ruby Bridge. Call FFMpeg/LibAVCodec/LibAVFormat directly"
 	p.url         = "http://github.com/hackerdude/ffmpeg-ruby"
 	p.author      = "David Martinez"

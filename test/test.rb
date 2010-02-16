@@ -27,7 +27,7 @@ puts "  Bit Rate: #{f.bit_rate}"
 puts "\nStream information:"
 f.streams.each{|s|
 	puts "  Canonical Codec: #{s.canonical_codec_name}"
-	puts "  Codec Long Name: #{s.codec.long_name}"
+	puts "  Codec Long Name: #{s.codec_context.long_name}"
 }
 
 puts "\nCodec Context Information for #{filename}"
