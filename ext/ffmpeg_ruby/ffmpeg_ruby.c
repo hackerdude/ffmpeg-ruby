@@ -12,5 +12,6 @@ void Init_ffmpeg_ruby()
 		mFFMpeg = rb_define_module("FFMpeg");
 		Init_ffmpeg_ruby_avcodec(mFFMpeg);
 		Init_ffmpeg_ruby_avformat(mFFMpeg);
+		Init_ffmpeg_ruby_avstream(mFFMpeg);
 }
 

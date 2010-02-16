@@ -82,11 +82,9 @@ VALUE AVCodec_long_name(VALUE self)
 
 VALUE AVCodec_name(VALUE self)
 {
-	char* tm;
   AVCodec *ptr;
   Data_Get_Struct(self, AVCodec, ptr);
-	tm = ptr->name;
-	return rb_str_new2(tm);
+	return rb_str_new2(ptr->name);
 }
 
 VALUE AVCodec_codec_type(VALUE self)
@@ -167,6 +165,44 @@ VALUE supported_audio_codecs()
 	}
 	return result;
 }
+/*
+ * Similar to avcodec_string but only 
+ * gets the name using thse same logic 
+ */
+VALUE avcodec_canonical_name(AVCodecContext *enc)
+{
+    const char *codec_name;
+    AVCodec *p;
+    char buf1[128];
+
+		p = avcodec_find_decoder(enc->codec_id);
+    if (p) {
+        codec_name = p->name;
+    } else if (enc->codec_id == CODEC_ID_MPEG2TS) {
+        /* fake mpeg2 transport stream codec (currently not
+ *            registered) */
+        codec_name = "mpeg2ts";
+    } else if (enc->codec_name[0] != '\0') {
+        codec_name = enc->codec_name;
+    } else {
+        /* output avi tags */
+        if(   isprint(enc->codec_tag&0xFF) && isprint((enc->codec_tag>>8)&0xFF)
+           && isprint((enc->codec_tag>>16)&0xFF) && isprint((enc->codec_tag>>24)&0xFF)){
+            snprintf(buf1, sizeof(buf1), "%c%c%c%c / 0x%04X",
+                     enc->codec_tag & 0xff,
+                     (enc->codec_tag >> 8) & 0xff,
+                     (enc->codec_tag >> 16) & 0xff,
+                     (enc->codec_tag >> 24) & 0xff,
+                      enc->codec_tag);
+        } else {
+            snprintf(buf1, sizeof(buf1), "0x%04x", enc->codec_tag);
+        }
+        codec_name = buf1;
+    }
+
+		return rb_str_new2(codec_name); // TODO on the ruby side, check enc->mb_decision to add the (hq) if we want to.
+}
+
 
 void Init_ffmpeg_ruby_avcodec(VALUE module)
 {

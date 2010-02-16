@@ -1,4 +1,5 @@
 VALUE cFFMpegAVCodecContext;
+VALUE cFFMpegAVCodec;
 
 void Init_ffmpeg_ruby_avcodec(VALUE module)
 
@@ -24,4 +25,5 @@ VALUE AVCodecContext_codec_name(VALUE self);
 VALUE supported_avcodecs();
 VALUE supported_video_codecs();
 VALUE supported_audio_codecs();
+VALUE avcodec_canonical_name(AVCodecContext *enc);
 

@@ -72,6 +72,21 @@ VALUE AVFormatContext_new(VALUE klaas, VALUE ruby_filename) {
 		return result;
 }
 
+VALUE AVFormatContext_streams(VALUE self) {
+  AVFormatContext *ptr;
+  Data_Get_Struct(self, AVFormatContext, ptr);
+	VALUE result = rb_ary_new();
+	int i;
+	for(i=0; i<ptr->nb_streams; i++) {
+		// Get a pointer to the codec context for the video stream
+		AVStream  *pStream = ptr->streams[i];
+		VALUE rStream  = Data_Wrap_Struct(cFFMpegAVStream, AVStream_mark, AVStream_free, pStream);
+		rb_obj_call_init(rStream,0,0);
+		rb_ary_push(result, rStream);
+	}
+	return result;
+}
+
 /* Return all the AVCodecContext entries for all streams in the file */
 VALUE AVFormatContext_codec_contexts(VALUE self) {
   AVFormatContext *ptr;
@@ -135,6 +150,7 @@ void Init_ffmpeg_ruby_avformat(VALUE module)
 		cFFMpegAVFormatContext = rb_define_class_under(module, "AVFormatContext", rb_cObject);
 		rb_define_singleton_method(cFFMpegAVFormatContext, "new", AVFormatContext_new, 1);
 		rb_define_method(cFFMpegAVFormatContext, "close_file", AVFormatContext_close_file, 0);
+		rb_define_method(cFFMpegAVFormatContext, "streams", AVFormatContext_streams, 0);
 		rb_define_method(cFFMpegAVFormatContext, "duration", AVFormatContext_duration, 0);
 		rb_define_method(cFFMpegAVFormatContext, "title", AVFormatContext_title, 0);
 		rb_define_method(cFFMpegAVFormatContext, "copyright", AVFormatContext_copyright, 0);
