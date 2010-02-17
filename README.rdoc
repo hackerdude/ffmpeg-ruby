@@ -29,7 +29,7 @@ Because of the way the library gets built, it needs to match the architecture ty
   (go have coffee)
   $ sudo env ARCHFLAGS="-arch x86_64" gem install ffmpeg-ruby
 
-If your machine is 32 bit, the ++ARCHFLAGS++ above should be ++ARCHFLAGS="-arch i386"+
+If your machine is 32 bit, the +ARCHFLAGS+ above should be ++ARCHFLAGS="-arch i386"+
 
 This will provide you with a bundle you can require.
 

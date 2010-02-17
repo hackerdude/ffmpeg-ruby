@@ -39,6 +39,27 @@ VALUE AVCodecContext_codec_id(VALUE self)
 	return result;
 }
 
+VALUE AVCodecContext_fourcc_tag(VALUE self)
+{
+  AVCodecContext *enc;
+	char buf1[128];
+
+  Data_Get_Struct(self, AVCodecContext, enc);
+	// TODO
+	if( isprint(enc->codec_tag&0xFF) && isprint((enc->codec_tag>>8)&0xFF)
+					&& isprint((enc->codec_tag>>16)&0xFF) && isprint((enc->codec_tag>>24)&0xFF)){
+			snprintf(buf1, sizeof(buf1), "%c%c%c%c",
+							enc->codec_tag & 0xff,
+							(enc->codec_tag >> 8) & 0xff,
+							(enc->codec_tag >> 16) & 0xff,
+							(enc->codec_tag >> 24) & 0xff);
+	} else {
+			snprintf(buf1, sizeof(buf1), "0x%04x", enc->codec_tag);
+	}
+	VALUE result = rb_str_new2(buf1);
+	return result;
+}
+
 VALUE AVCodecContext_width(VALUE self)
 {
   AVCodecContext *ptr;
@@ -166,8 +187,8 @@ VALUE supported_audio_codecs()
 	return result;
 }
 /*
- * Similar to avcodec_string but only 
- * gets the name using thse same logic 
+ * Similar to avcodec_string on ffmpeg, but only 
+ * gets the name using thse same logic. Uses the AVI tags
  */
 VALUE avcodec_canonical_name(AVCodecContext *enc)
 {
@@ -182,18 +203,17 @@ VALUE avcodec_canonical_name(AVCodecContext *enc)
         /* fake mpeg2 transport stream codec (currently not
  *            registered) */
         codec_name = "mpeg2ts";
-    } else if (enc->codec_name[0] != '\0') {
-        codec_name = enc->codec_name;
+    // } else if (enc->codec_name[0] != '\0') {
+        // codec_name = enc->codec_name;
     } else {
         /* output avi tags */
         if(   isprint(enc->codec_tag&0xFF) && isprint((enc->codec_tag>>8)&0xFF)
            && isprint((enc->codec_tag>>16)&0xFF) && isprint((enc->codec_tag>>24)&0xFF)){
-            snprintf(buf1, sizeof(buf1), "%c%c%c%c / 0x%04X",
+            snprintf(buf1, sizeof(buf1), "%c%c%c%c",
                      enc->codec_tag & 0xff,
                      (enc->codec_tag >> 8) & 0xff,
                      (enc->codec_tag >> 16) & 0xff,
-                     (enc->codec_tag >> 24) & 0xff,
-                      enc->codec_tag);
+                     (enc->codec_tag >> 24) & 0xff);
         } else {
             snprintf(buf1, sizeof(buf1), "0x%04x", enc->codec_tag);
         }
@@ -218,6 +238,7 @@ void Init_ffmpeg_ruby_avcodec(VALUE module)
 		rb_define_method(cFFMpegAVCodecContext, "long_name", AVCodecContext_codec_long_name, 0);
 		rb_define_method(cFFMpegAVCodecContext, "name", AVCodecContext_codec_name, 0);
 		rb_define_method(cFFMpegAVCodecContext, "codec_type", AVCodecContext_codec_type, 0);
+		rb_define_method(cFFMpegAVCodecContext, "fourcc_tag", AVCodecContext_fourcc_tag, 0);
 		rb_define_method(cFFMpegAVCodecContext, "codec_id", AVCodecContext_codec_id, 0);
 		rb_define_method(cFFMpegAVCodecContext, "width", AVCodecContext_width, 0);
 		rb_define_method(cFFMpegAVCodecContext, "height", AVCodecContext_height, 0);
